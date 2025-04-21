@@ -1,4 +1,5 @@
 from ast_nodes import *
+from parser_test import parse_expr
 
 def to_cnf(expr: Expr) -> Expr:
     expr = eliminate_iff(expr)
@@ -130,4 +131,23 @@ def cnf_to_clauses(expr: Expr) -> list[list[str]]:
         or_parts = flatten_or(part)
         literals = [literal_to_str(lit) for lit in or_parts]
         clauses.append(sorted(set(literals)))
+    return clauses
+
+
+def string_to_clauses(string):
+    """
+    Converts strings like "(p -> q) <-> !(r & s)" directly into cnf clauses:
+    [["!r", "!s", "p"],
+    ["!r", "!s", "!q"],
+    ["!p", "q", "r"],
+    ["!p", "q", "s"]]
+    """
+    expr = parse_expr(string)
+    cnf = to_cnf(expr)
+    and_parts = flatten_and(cnf)
+    clauses = []
+    for part in and_parts:
+        literals = flatten_or(part)
+        clause = [literal_to_str(lit) for lit in literals]
+        clauses.append(sorted(set(clause)))
     return clauses
