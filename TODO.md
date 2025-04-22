@@ -21,10 +21,10 @@
 - [x] Test CNF output correctness
 
 ## Logical Entailment (Resolution)
-- [ ] Implement clause-level resolution algorithm
-- [ ] Implement entailment test: `entails(belief_base, formula)`
-- [ ] Handle tautologies and contradictions correctly
-- [ ] Test entailment with known valid/invalid cases
+- [x] Implement clause-level resolution algorithm
+- [x] Implement entailment test: `entails(belief_base, formula)`
+- [x] Handle tautologies and contradictions correctly
+- [x] Test entailment with known valid/invalid cases
 
 ## Belief Contraction
 - [ ] Implement **partial meet contraction** algorithm
