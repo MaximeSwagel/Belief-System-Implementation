@@ -1,6 +1,9 @@
 from cnf_conversion import string_to_clauses
 
 def entails(kb, query):
+    if not kb:
+        return False
+
     negated = f"!({query})"
     all_clauses = []
     for formula in kb + [negated]:
