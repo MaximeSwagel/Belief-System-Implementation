@@ -27,10 +27,10 @@
 - [x] Test entailment with known valid/invalid cases
 
 ## Belief Contraction
-- [ ] Implement **partial meet contraction** algorithm
+- [x] Implement **partial meet contraction** algorithm
 - [ ] Implement prioritization heuristic (e.g., recency, strength)
-- [ ] Ensure output belief base no longer entails ¬φ
-- [ ] Test contraction on edge cases
+- [x] Ensure output belief base no longer entails ¬φ
+- [x] Test contraction on edge cases
 
 ## Belief Expansion
 - [ ] Implement safe addition of formula to belief base
