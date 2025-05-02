@@ -1,20 +1,21 @@
 from contraction import contract  
 from resolution import entails    
 from parser import Parser         
-from tokenizer import tokenize    
+from tokenizer import tokenize
+from expansion import expand    
 from copy import deepcopy         # For safe testing without modifying original KB
 
 # Helper to parse logic strings into AST
 def parse(s):
     return Parser(tokenize(s)).parse()
 
-# Placeholder expansion: simply adds p to the KB if it's not already there
-# Does not check consistency (which would be required in full expansion logic)
-def expand(kb, p_str):
-    p = parse(p_str)
-    if p not in kb:
-        kb.append(p)
-    return kb
+# # Placeholder expansion: simply adds p to the KB if it's not already there
+# # Does not check consistency (which would be required in full expansion logic)
+# def expand(kb, p_str):
+#     p = parse(p_str)
+#     if p not in kb:
+#         kb.append(p)
+#     return kb
 
 # Revision using Levi Identity: revise(KB, p) = expand(contract(KB, ¬p), p)
 def revise(kb, p_str):
