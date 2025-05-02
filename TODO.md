@@ -7,30 +7,30 @@
 
 
 ## Formula Parsing
-- [ ] Define AST node classes (`Var`, `Not`, `And`, `Or`, `Implies`, `Iff`)
-- [ ] Implement tokenizer for propositional logic formulas
-- [ ] Implement recursive descent parser
+- [x] Define AST node classes (`Var`, `Not`, `And`, `Or`, `Implies`, `Iff`)
+- [x] Implement tokenizer for propositional logic formulas
+- [x] Implement recursive descent parser
 - [ ] Add error handling for malformed input
-- [ ] Write unit tests for parsing
+- [x] Write unit tests for parsing
 
 ## CNF Conversion
-- [ ] Implement transformation from arbitrary formula to CNF:
-  - [ ] Eliminate `→` and `↔`
-  - [ ] Push negations inward (De Morgan's Laws)
-  - [ ] Distribute ∧ over ∨
-- [ ] Test CNF output correctness
+- [x] Implement transformation from arbitrary formula to CNF:
+  - [x] Eliminate `→` and `↔`
+  - [x] Push negations inward (De Morgan's Laws)
+  - [x] Distribute ∨ over ∧
+- [x] Test CNF output correctness
 
 ## Logical Entailment (Resolution)
-- [ ] Implement clause-level resolution algorithm
-- [ ] Implement entailment test: `entails(belief_base, formula)`
-- [ ] Handle tautologies and contradictions correctly
-- [ ] Test entailment with known valid/invalid cases
+- [x] Implement clause-level resolution algorithm
+- [x] Implement entailment test: `entails(belief_base, formula)`
+- [x] Handle tautologies and contradictions correctly
+- [x] Test entailment with known valid/invalid cases
 
 ## Belief Contraction
-- [ ] Implement **partial meet contraction** algorithm
+- [x] Implement **partial meet contraction** algorithm
 - [ ] Implement prioritization heuristic (e.g., recency, strength)
-- [ ] Ensure output belief base no longer entails ¬φ
-- [ ] Test contraction on edge cases
+- [x] Ensure output belief base no longer entails ¬φ
+- [x] Test contraction on edge cases
 
 ## Belief Expansion
 - [ ] Implement safe addition of formula to belief base
