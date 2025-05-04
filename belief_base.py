@@ -1,16 +1,19 @@
 from contraction import contract
 from expansion import expand
-from revision import revise
+from revision import revise, test_agm_postulates
 
 class Belief_base:
-    def __init__(self,Kb :list[str]):
-        self.beliefs = Kb
+    def __init__(self,Bs :list[str]):
+        self.beliefs = Bs
     
     def contract(self,formula : str):
-        contract(self.Kb,formula)
+        self.beliefs = contract(self.beliefs,formula)
 
     def expand(self,formula : str):
-        expand(self.Kb,formula)
+        self.beliefs = expand(self.beliefs,formula)
 
-    def resolve(self,formula :str):
-        revise(self.Kb,formula)
+    def revise(self,formula :str):
+        self.beliefs = revise(self.beliefs,formula)
+    
+    def __str__(self):
+        return '{' + ','.join(str(belief) for belief in self.beliefs) + '}'
