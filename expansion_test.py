@@ -1,5 +1,5 @@
 import unittest
-from expansion import expand, parse
+from expansion import expand
 
 class TestExpansion(unittest.TestCase):
     def test_adds_new_belief(self):
