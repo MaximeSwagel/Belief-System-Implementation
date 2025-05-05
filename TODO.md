@@ -1,16 +1,16 @@
 # Belief Revision Engine - Checklist
 
 ## Belief base
-- [ ] Create `BeliefBase` class to store propositional formulas
-- [ ] Add support for adding and removing formulas
-- [ ] Add support for formula prioritization (for contraction)
+- [x] Create `BeliefBase` class to store propositional formulas
+- [x] Add support for adding and removing formulas
+- [x] Add support for formula prioritization (for contraction)
 
 
 ## Formula Parsing
 - [x] Define AST node classes (`Var`, `Not`, `And`, `Or`, `Implies`, `Iff`)
 - [x] Implement tokenizer for propositional logic formulas
 - [x] Implement recursive descent parser
-- [ ] Add error handling for malformed input
+- [x] Add error handling for malformed input
 - [x] Write unit tests for parsing
 
 ## CNF Conversion
@@ -28,33 +28,33 @@
 
 ## Belief Contraction
 - [x] Implement **partial meet contraction** algorithm
-- [ ] Implement prioritization heuristic (e.g., recency, strength)
+- [x] Implement prioritization heuristic (e.g., recency, strength)
 - [x] Ensure output belief base no longer entails ¬φ
 - [x] Test contraction on edge cases
 
 ## Belief Expansion
-- [ ] Implement safe addition of formula to belief base
-- [ ] Check for and resolve inconsistencies
-- [ ] Optionally reject expansion if it creates contradictions
+- [x] Implement safe addition of formula to belief base
+- [x] Check for and resolve inconsistencies
+- [x] Optionally reject expansion if it creates contradictions
 
 ## Belief Revision
-- [ ] Implement revision as `Rev(B, φ) = Expand(Contract(B, ¬φ), φ)`
-- [ ] Combine contraction and expansion correctly
-- [ ] Test revision across multiple scenarios
+- [x] Implement revision as `Rev(B, φ) = Expand(Contract(B, ¬φ), φ)`
+- [x] Combine contraction and expansion correctly
+- [x] Test revision across multiple scenarios
 
 ## AGM Postulates Validation
-- [ ] Implement automated tests for AGM postulates:
-  - [ ] Success: `φ ∈ Rev(B, φ)`
-  - [ ] Inclusion: `Rev(B, φ) ⊆ B + φ`
-  - [ ] Vacuity: if `¬φ ∉ Cn(B)`, then `B + φ = Rev(B, φ)`
-  - [ ] Consistency: if `φ` is consistent, so is `Rev(B, φ)`
-  - [ ] Extensionality: logically equivalent `φ, ψ ⇒ same revision`
+- [x] Implement automated tests for AGM postulates:
+  - [x] Success: `φ ∈ Rev(B, φ)`
+  - [x] Inclusion: `Rev(B, φ) ⊆ B + φ`
+  - [x] Vacuity: if `¬φ ∉ Cn(B)`, then `B + φ = Rev(B, φ)`
+  - [x] Consistency: if `φ` is consistent, so is `Rev(B, φ)`
+  - [x] Extensionality: logically equivalent `φ, ψ ⇒ same revision`
 
   ## (Optional) Mastermind Integration
-- [ ] Encode game rules as beliefs
-- [ ] Revise beliefs based on guess feedback
-- [ ] Generate next guess from belief base
-- [ ] Loop until code is found
+- [x] Encode game rules as beliefs
+- [x] Revise beliefs based on guess feedback
+- [x] Generate next guess from belief base
+- [x] Loop until code is found
 
 ## Horn Clause Optimization (Optional)
 - [ ] Detect whether a clause is a **Horn clause**
