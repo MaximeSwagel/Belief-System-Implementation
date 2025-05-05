@@ -1,95 +1,106 @@
-from contraction import contract  
-from resolution import entails    
-from parser import Parser         
-from tokenizer import tokenize
-from expansion import expand    
-from copy import deepcopy         
-
-# Helper to parse logic strings into AST
-def parse(s):
-    return Parser(tokenize(s)).parse()
-
-# # Placeholder expansion: simply adds p to the KB if it's not already there
-# # Does not check consistency (which would be required in full expansion logic)
-# def expand(kb, p_str):
-#     p = parse(p_str)
-#     if p not in kb:
-#         kb.append(p)
-#     return kb
+from contraction import contract
+from expansion   import expand, formula_eq
+from resolution  import entails
+from copy import deepcopy
 
 
-# Check if a knowledge base is consistent (does not entail a contradiction)
-def is_consistent(kb):
-    return not entails([str(f) for f in kb], "a & !a")
+def bases_equivalent(kb1: list[str], kb2: list[str]) -> bool:
+    """True iff every sentence of one base is entailed by the other."""
+    return all(entails(kb2, s) for s in kb1) and \
+           all(entails(kb1, s) for s in kb2)
 
-# Very simple normalization: eliminate double negation
-def normalize_formula_str(s):
-    return s.replace("!!", "")
 
-# Normalize full KB to compare logical equivalence (loose string form)
-def normalize_kb(kb):
-    return set(normalize_formula_str(str(f)).replace("(", "").replace(")", "").strip() for f in kb)
+def revise(Kb: list[str], p: str, prio = None) -> list[str]:
+    """
+    AGM revision of belief base `Kb` by sentence `p`, using Levi Identity.
 
-# Revision using Levi Identity: revise(KB, p) = expand(contract(KB, ¬p), p)
-def revise(kb, p_str):
-    not_p = f"!({p_str})"
-    kb_strings = [str(f) for f in kb]      
-    contracted = contract(kb_strings, not_p) 
-    parsed_kb = [parse(f) for f in contracted]  
-    return expand(parsed_kb, p_str)      
+    Parameters
+    ----------
+    kb : list[str]
+        Current belief base (strings).
+    p  : str
+        New information to revise with.
 
-# Tests 5 AGM postulates: Success, Inclusion, Vacuity, Consistency, Extensionality
+    Returns
+    -------
+    list[str]  --  new belief base (fresh list).
+    """
+    not_p = f"!({p})"             # syntactically safe negation
+    contracted = contract(Kb, not_p, prio)      # gives a *new* list
+    revised    = expand(contracted, p)    # add p unless already equivalent
+    return revised
+
+def is_consistent(Kb: list[str]) -> bool:
+    """
+    Returns True iff `kb` is logically consistent,
+    implemented only with the higher‑level `entails`.
+    """
+    # Pick an atom that definitely does *not* occur in the KB
+    atom = "__fresh__"
+    while any(atom in f for f in Kb):
+        atom = "_" + atom            # extend until it is fresh
+
+    # Inconsistency ⇒ KB ⊨ φ  and  KB ⊨ ¬φ   for *every* φ.
+    return not (entails(Kb, atom) and entails(Kb, f"!{atom}"))
+
 def test_agm_postulates():
     passed, failed = [], []
 
-    kb = [parse("p"), parse("p -> q")]
-    p_str = "q"
-    revised = revise(deepcopy(kb), p_str)
+    # Base KB and sentence to revise with
+    kb      = ["p", "p -> q"]           #   { p , p → q }
+    p       = "q"                       # will be added by revision
+    p_equiv = "!!q"                     # logically equivalent to q (double neg)
 
-    # 1. Success
-    if any(entails([str(f)], p_str) for f in revised):
+    # ---------- Perform revision once so we can reuse the result ----------
+    revised     = revise(deepcopy(kb), p)
+    expanded_kb = expand(deepcopy(kb), p)
+
+    # ------------------------------------------------------------------ 1. Success
+    if entails(revised, p):
         passed.append("Success")
     else:
         failed.append("Success")
 
-    # 2. Inclusion
-    expanded = expand(deepcopy(kb), p_str)
-    if set(str(f) for f in revised).issubset(set(str(f) for f in expanded)):
+    # --------------------------------------------------------------- 2. Inclusion
+    if set(revised).issubset(set(expanded_kb)):
         passed.append("Inclusion")
     else:
         failed.append("Inclusion")
 
-    # 3. Vacuity
-    if not entails([str(f) for f in kb], f"!({p_str})"):
-        revised_vac = revise(deepcopy(kb), p_str)
-        expanded_vac = expand(deepcopy(kb), p_str)
-        if set(str(f) for f in revised_vac) == set(str(f) for f in expanded_vac):
+    # ----------------------------------------------------------------- 3. Vacuity
+    if not entails(kb, f"!({p})"):                  # ¬p is *not* already entailed
+        rev_vac = revise(deepcopy(kb), p)
+        exp_vac = expand(deepcopy(kb), p)
+        if set(rev_vac) == set(exp_vac):
             passed.append("Vacuity")
         else:
             failed.append("Vacuity")
+    else:                                           # Vacuity not applicable
+        passed.append("Vacuity (N/A)")
 
-    # 4. Consistency
-    if is_consistent(kb + [parse(p_str)]):
-        if is_consistent(revised):
-            passed.append("Consistency")
-        else:
-            failed.append("Consistency")
+    # -------------------------------------------------------------- 4. Consistency
+    if is_consistent(revised):
+        passed.append("Consistency")
+    else:
+        failed.append("Consistency")
 
-    # 5. Extensionality
-    equivalent_q = f"!!({p_str})"
-    revised_eq = revise(deepcopy(kb), equivalent_q)
-    normalized_revised = normalize_kb(revised)
-    normalized_revised_eq = normalize_kb(revised_eq)
+    # ------------------------------ 5. Extensionality
+    assert formula_eq(p, p_equiv)
+    rev1 = revise(deepcopy(kb), p)
+    rev2 = revise(deepcopy(kb), p_equiv)
 
-    if normalized_revised == normalized_revised_eq:
+    if bases_equivalent(rev1, rev2):
         passed.append("Extensionality")
     else:
         failed.append("Extensionality")
 
-    return passed, failed  # ✅ ensure it's outside all if/else
+    return passed, failed
 
-# Run postulate tests when script is executed
+
+# --------------------------------------------------------------------------- #
+# Small CLI hook
+# --------------------------------------------------------------------------- #
 if __name__ == "__main__":
-    passed, failed = test_agm_postulates()
-    print("Passed:", passed)
-    print("Failed:", failed)
+    ok, bad = test_agm_postulates()
+    print("Passed:", ok)
+    print("Failed:", bad)
