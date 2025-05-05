@@ -3,7 +3,6 @@ from cnf_conversion import string_to_clauses
 def entails(kb, query):
     if not kb:
         return False
-
     negated = f"!({query})"
     all_clauses = []
     for formula in kb + [negated]:
@@ -23,14 +22,28 @@ def resolve(ci, cj):
 
 def resolution(clauses):
     new = set()
+    seen_pairs = set()
+
     while True:
         pairs = [(clauses[i], clauses[j])
                  for i in range(len(clauses)) for j in range(i + 1, len(clauses))]
+        temp = 1
+        p = len(pairs)
         for (ci, cj) in pairs:
+            # print(f'{temp}/{p}')
+            temp += 1
+
+            key = frozenset([frozenset(ci), frozenset(cj)])
+            if key in seen_pairs:
+                continue
+            seen_pairs.add(key)
+
             resolvent = resolve(ci, cj)
             if resolvent is not None:
                 if not resolvent:
                     return True
+                if any(lit in resolvent and f"!{lit}" in resolvent for lit in resolvent):
+                    continue
                 new.add(frozenset(resolvent))
         new_clauses = [set(c) for c in new if set(c) not in clauses]
         if not new_clauses:
