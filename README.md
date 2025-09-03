@@ -1,6 +1,10 @@
 # 02180_intro_to_ai_group_28_assignment_2
 
-This project is the implementation of a belief base revision system in Python, submitted for the DTU course *02180 Introduction to Artificial Intelligence*. It follows the AGM postulates and includes support for contraction, expansion, and revision. The system is tested with a suite of unit tests, and an optional Mastermind solver is also implemented using the belief revision engine.
+This project is the implementation of a belief base revision system in Python, submitted for the DTU course in a group of 4 *02180 Introduction to Artificial Intelligence*. It follows the AGM postulates and includes support for contraction, expansion, and revision. The system is tested with a suite of unit tests, and an optional Mastermind solver is also implemented using the belief revision engine.
+
+# Collaboration
+The coding work was divided evenly, and we collaborated closely on all tasks.  
+For reference, the original group repository can be found [here](https://github.com/MagnusStarkadOttosen/02180_intro_to_ai_group_28_assignment_2).
 
 ## How to Run
 Just need python 3.7+
